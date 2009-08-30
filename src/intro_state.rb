@@ -10,7 +10,7 @@ class Intro < Chingu::GameState
       "...I haven't felt in ages...",
     ].reverse
     
-    self.input = { :space => :start_game }
+    self.input = { :space => :start_game, :esc => :exit }
   end
   
   def start_game

@@ -72,7 +72,7 @@ class Cavern < Chingu::GameState
   #
   #
   def update(time)
-    $window.caption = "The Eternally Grey. game objects: #{game_objects.size} - fps #{$window.fps} - seconds: #{game_state_age}"
+    ## $window.caption = "The Eternally Grey. game objects: #{game_objects.size} - fps #{$window.fps} - seconds: #{game_state_age}"
     @cursor.x = $window.mouse_x
     @cursor.y = $window.mouse_y
     

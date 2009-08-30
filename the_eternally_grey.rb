@@ -5,10 +5,11 @@
 #
 $stderr.sync = $stdout.sync = true
 ROOT_PATH = File.dirname(File.expand_path(__FILE__))
+ENV["RUBYOPT"] = nil
 
-require 'rubygems'
-require 'chingu'
-require 'gosu'
+#require 'rubygems'
+require File.join(ROOT_PATH, 'lib', 'gosu.for_1_9.so')
+require File.join(ROOT_PATH, 'lib', 'chingu')
 include Gosu
 
 %w{my_game_object enemies cave_objects core_extensions game_over_state intro_state menu_state cavern_state}.each do |file|
@@ -19,7 +20,7 @@ end
 class Game < Chingu::Window
   def initialize
     super(1000,700)
-    caption = "The Eternally Grey."
+    self.caption = "The Eternally Grey."
     
     switch_game_state(Intro.new)
   end
