@@ -12,16 +12,18 @@ class Cavern < Chingu::GameState
     @ceiling_height = 40
     @floor_y = $window.height - 100   ## 100 pixel thick cave floor
         
-    self.input = {  :g => :spawn_gemstone,
-                    :q => :game_over,
-                    :d => :dig,
-                    :f => :drill,
-                    :m => :spawn_machine,
-                    :space => :spawn_miner,
-                    :left_ctrl => :spawn_stalactite,
-                    :left_mouse_button => :click,
-                    :i => :debug,
-                    :esc => :exit }
+#    self.input = {  :g => :spawn_gemstone,
+#                    :q => :game_over,
+#                    :d => :dig,
+#                    :f => :drill,
+#                    :m => :spawn_machine,
+#                    :space => :spawn_miner,
+#                    :left_ctrl => :spawn_stalactite,
+#                    :left_mouse_button => :click,
+#                    :i => :debug,
+#                    :esc => :exit }
+                    
+    self.input = { :left_mouse_button => :click, :esc => :exit}
     @cursor = Cursor.new
     
     @riches = 100

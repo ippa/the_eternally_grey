@@ -1,1 +1,1 @@
-ocra the_eternally_grey.rb media\* --no-autodll --windows
+ocra the_eternally_grey.rb media\** lib\** --no-autodll --windows
