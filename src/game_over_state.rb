@@ -1,8 +1,9 @@
 class GameOver < Chingu::GameState
-  def initialize
+  def initialize(options)
     super
-    @text = Chingu::Text.new(:text => "GAME OVER - They stole all your riches",:x => 100, :y => 200, :size => 22, :zorder => 1000)
-    @text2 = Chingu::Text.new(:text => "ESC: quit  SPACE: try again",:x => 140, :y => 300, :size => 16, :zorder => 1000)
+    @score = options[:score]
+    @text = Chingu::Text.new(:text => "GAME OVER - They stole all your riches. Score: #{@score}.", :x => 200, :y => 200, :size => 30, :zorder => 1000)
+    @text2 = Chingu::Text.new(:text => "ESC: quit  SPACE: try again",:x => 400, :y => 300, :size => 20, :zorder => 1000)
     self.input = { :esc => :exit, :space => :play_again }
   end
   

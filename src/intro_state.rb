@@ -6,8 +6,7 @@ class Intro < Chingu::GameState
       "...mmmnmnnm...hmmm....I'm so tired...",
       "why am I awake? what am I?",
       "...wait, what is this...",
-      "...something, a feeling ... ",
-      "...I haven't felt in ages...",
+      "...something, a feeling ... I haven't felt in ages..."
     ].reverse
     
     self.input = { :space => :start_game, :esc => :exit }
@@ -24,7 +23,7 @@ class Intro < Chingu::GameState
       if string = @strings.pop
         @text = Text.new(:text => string, :x => 100, :y => 200)
       else
-        pop_game_state
+        switch_game_state(Cavern.new)
       end
     end
     @text.zoom(0.005)
@@ -35,7 +34,7 @@ class Intro < Chingu::GameState
     Song["the_eternally_grey_1.ogg"].play(true)
   end
   
-  def finalize
-    Song.current_song.stop
-  end
+  #def finalize
+  #  Song.current_song.stop
+  #end
 end

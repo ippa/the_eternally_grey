@@ -33,8 +33,8 @@ class Stalactite < MyGameObject
   def initialize(opions)
     super
     @color = Color.new(255,150,150,150)
-    @width = 1
-    @height = 2
+    @width = 2
+    @height = 4
 
     @velocity = 5
     @zorder = 5

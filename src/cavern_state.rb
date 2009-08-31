@@ -1,4 +1,6 @@
 class Cavern < Chingu::GameState
+  attr_reader :floor_y
+  
   def initialize
     super
     @black = Color.new(255,0,0,0)
@@ -18,6 +20,7 @@ class Cavern < Chingu::GameState
                     :space => :spawn_miner,
                     :left_ctrl => :spawn_stalactite,
                     :left_mouse_button => :click,
+                    :i => :debug,
                     :esc => :exit }
     @cursor = Cursor.new
     
@@ -33,14 +36,21 @@ class Cavern < Chingu::GameState
     @score = 0    
     @first_dig = true
     @first_drill = true
+    @first_gem = true
     @milliseconds = milliseconds()
     game_objects.delete_if { |o| o.is_a?(Miner) || o.is_a?(Machine) || o.is_a?(Gemstone) || o.is_a?(Stalactite)}
     spawn_miner
     5.times { spawn_stalactite }
   end
 
+  def debug
+    game_objects_of_class(Gemstone).each do |gemstone|
+      puts "#{gemstone.type} - #{gemstone.status}"
+    end
+  end
+  
   def game_over
-    switch_game_state(GameOver.new)
+    switch_game_state(GameOver.new(:score => @score))
   end
   
   def game_state_age
@@ -59,7 +69,7 @@ class Cavern < Chingu::GameState
     end
   end
   def spawn_stalactite
-    Stalactite.new(:x => 100 + rand(400)*2, :y => @ceiling_height)
+    Stalactite.new(:x => rand($window.width), :y => @ceiling_height)
   end
   def spawn_gemstone(x=200, y = @floor_y)
     type = Gemstone.gem_types[rand(Gemstone.gem_types.size)]
@@ -85,16 +95,21 @@ class Cavern < Chingu::GameState
     if game_objects_of_class(Machine).size < 6
       spawn_machine     if (game_state_age > 120) && rand(7 * (120-value)) == 0
     end
-    
-    if game_objects_of_class(Stalactite).size < 20
+
+    if game_objects_of_class(Stalactite).size < 5
+      spawn_stalactite  if rand(100) == 0
+    elsif game_objects_of_class(Stalactite).size < 10
       spawn_stalactite  if rand(200) == 0
+    elsif game_objects_of_class(Stalactite).size < 20
+      spawn_stalactite  if rand(300) == 0
     end
-    
+
+
     game_objects.select { |o| o.outside_window? && o.is_a?(Gemstone) }.each do |gemstone|
       @riches -= gemstone.score
-      CavernText.new("They stole my beautiful child '#{gemstone.type}'!")
+      CavernText.new("They stole my beautiful child, #{gemstone.type}. I raised her for #{gemstone.score} years.")
       @riches_rect.width = @riches
-      push_game_state(GameOver.new)   if @riches <= 0
+      push_game_state(GameOver.new(:score => @score))   if @riches <= 0
     end
     
     game_objects.delete_if { |o| (o.outside_window? || o.color.alpha == 0) && o.class != Cursor }
@@ -103,10 +118,12 @@ class Cavern < Chingu::GameState
     @riches_text.text = "Riches: #{@riches}"
     @score_text.text = "Score: #{@score}"
     
-    game_objects_of_class(Miner).each do |miner|
+    game_objects_of_class(Miner).select {|miner| miner.status != :dead}.each do |miner|
       game_objects_of_class(Gemstone).select { |gemstone| gemstone.status != :attached }.each do |gemstone|
         if miner.rect.collide_rect?(gemstone.rect)
           miner.attach(gemstone)
+          CavernText.new("They're stealing my loved ones!")  if @first_gem
+          @first_gem = false
         end
       end
     end
@@ -116,7 +133,7 @@ class Cavern < Chingu::GameState
     #
     game_objects_of_class(Stalactite).each do |stalactite|
       # Grow all rocks slowly
-      stalactite.grow   if stalactite.status == :default && rand(80) == 0
+      stalactite.grow   if stalactite.status == :default && rand(100) == 0
           
       # Rocks hitting the floor
       if (stalactite.y + stalactite.height) > @floor_y && stalactite.y < @floor_y
@@ -127,10 +144,10 @@ class Cavern < Chingu::GameState
       end
       
       # Rocks hitting miners and vehicles
-      game_objects.select { |o| o.is_a?(Miner) || o.is_a?(Machine) }.each do |enemy|
+      game_objects.select { |o| (o.is_a?(Miner) || o.is_a?(Machine)) }.each do |enemy|
         if stalactite.rect.collide_rect?(enemy.rect)
           
-          @score += [stalactite.power, enemy.energy].min
+          @score += [stalactite.power, enemy.energy].min  if enemy.status != :dead
           enemy.hit_by(stalactite.power)
           2.times { spawn_smoke(stalactite.rect.centerx, @floor_y - enemy.rect.height, stalactite.power/800) }
           enemy.rect.y = @floor_y
@@ -138,11 +155,6 @@ class Cavern < Chingu::GameState
           game_objects.delete(stalactite)
         end
       end
-      
-      #
-      #
-      #
-
     end
     
     super
@@ -172,7 +184,7 @@ class Cavern < Chingu::GameState
       end
 
       if @first_drill && object.is_a?(Machine)
-        CavernText.new("... What new evil things are these?")
+        CavernText.new("... What is this big evil thing?")
         @first_drill = false
       end
 

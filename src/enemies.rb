@@ -3,7 +3,7 @@ class Miner < MyGameObject
     super
     @height = 32
     @width = 32
-    @energy = 50
+    @energy = 100
     
     @dig_at = options[:dig_at] || rand($window.width) ##$window.width/2 + 100 - rand(200)
     
@@ -44,7 +44,7 @@ class Miner < MyGameObject
     @animation = @animations[@status]
     
     # Start digging if, Not already digging, on the right place.. and not carrying anything!
-    self.dig    if @status != :digging && @x == @dig_at && @attached_objects.empty?
+    self.dig    if @status == :moving && @x == @dig_at && @attached_objects.empty?
   
     super
   end  
@@ -93,7 +93,7 @@ class Machine < MyGameObject
     @animation = @animations[@status]
     
     # Start digging if, Not already digging, on the right place.. and not carrying anything!
-    self.dig    if @status != :digging && @x == @dig_at && @attached_objects.empty?
+    self.dig    if @status == :moving && @x == @dig_at && @attached_objects.empty?
     
     super
   end

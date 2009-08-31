@@ -28,17 +28,19 @@ class MyGameObject < Chingu::GameObject
   def hit_by(power)
     @energy -= power
     self.die!  if @energy < 0
-
+    puts "Hit by #{power}, energy: #{@energy}"
   end
   
   def die!
-    @status = :dead   
+    @status = :dead
     @velocity_y = 0
     @velocity_x = 0
 
     @attached_objects.each do |attached_object|
       attached_object.status = :default
+      attached_object.y = parent.floor_y
     end
+    @attached_objects.clear
   end
   
   def done_digging
@@ -68,6 +70,7 @@ class MyGameObject < Chingu::GameObject
       attached_object.x = self.x
       attached_object.y = self.y - attached_object.image.height/2 + 4
       attached_object.zorder = self.zorder + 1
+      attached_object.update(time)
     end
 
     self.fade(-1) if @status == :dead
