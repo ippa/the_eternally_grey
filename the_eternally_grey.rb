@@ -8,7 +8,12 @@ ROOT_PATH = File.dirname(File.expand_path(__FILE__))
 ENV["RUBYOPT"] = nil
 
 #require 'rubygems'
-require File.join(ROOT_PATH, 'lib', 'gosu.for_1_9.so')
+
+begin
+  require 'gosu'
+rescue
+  require File.join(ROOT_PATH, 'lib', 'gosu.for_1_9.so')  
+end
 require File.join(ROOT_PATH, 'lib', 'chingu')
 include Gosu
 
