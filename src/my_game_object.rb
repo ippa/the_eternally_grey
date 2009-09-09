@@ -62,7 +62,7 @@ class MyGameObject < Chingu::GameObject
     @status = :moving
   end
  
- def update(time)
+ def update
     @x += @velocity_x
     @y += @velocity_y
 
@@ -70,7 +70,7 @@ class MyGameObject < Chingu::GameObject
       attached_object.x = self.x
       attached_object.y = self.y - attached_object.image.height/2 + 4
       attached_object.zorder = self.zorder + 1
-      attached_object.update(time)
+      attached_object.update
     end
 
     self.fade(-1) if @status == :dead

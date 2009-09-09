@@ -1,4 +1,6 @@
 class Miner < MyGameObject  
+  has_trait :effect
+  
   def initialize(options)
     super
     @height = 32
@@ -40,7 +42,7 @@ class Miner < MyGameObject
     @velocity_y = 0
   end
 
-  def update(time)
+  def update
     @animation = @animations[@status]
     
     # Start digging if, Not already digging, on the right place.. and not carrying anything!
@@ -89,7 +91,7 @@ class Machine < MyGameObject
     @velocity_y = 0
   end
   
-  def update(time)
+  def update
     @animation = @animations[@status]
     
     # Start digging if, Not already digging, on the right place.. and not carrying anything!
@@ -101,6 +103,8 @@ end
 
 
 class Crack < Chingu::GameObject
+  has_trait :effect
+    
   attr_reader :status
   
   def initialize(options)
@@ -129,7 +133,7 @@ class Crack < Chingu::GameObject
     end
   end
 
-  def update(time)
+  def update
     if finished?
       self.fade(-1)
     end

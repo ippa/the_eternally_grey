@@ -83,7 +83,7 @@ class Cavern < Chingu::GameState
   # CORE OF THE GAME LOGIC
   #
   #
-  def update(time)
+  def update
     ## $window.caption = "The Eternally Grey. game objects: #{game_objects.size} - fps #{$window.fps} - seconds: #{game_state_age}"
     @cursor.x = $window.mouse_x
     @cursor.y = $window.mouse_y
@@ -165,7 +165,7 @@ class Cavern < Chingu::GameState
   def spawn_smoke(x, y, factor)
     x += 10 - rand(20)
     y += 10 - rand(20)
-    Particle.new(:x => x, :y => y, :image => Image["particle.png"], :fade => -5, :rotation => 10, :zoom => 0.04, :zorder => 100, :mode => :default, :factor => factor)
+    Particle.new(:x => x, :y => y, :image => Image["particle.png"], :fading => -5, :rotating => 10, :zooming => 0.04, :zorder => 100, :mode => :default, :factor => factor)
   end
   
   def click

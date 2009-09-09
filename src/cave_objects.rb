@@ -30,6 +30,7 @@ class Gemstone < MyGameObject
 end
 
 class Stalactite < MyGameObject
+  has_trait :effect
   def initialize(opions)
     super
     @color = Color.new(255,150,150,150)
@@ -68,11 +69,12 @@ end
 
 
 class CavernText < Chingu::Text
+  has_trait :effect
   def initialize(text = "no-text :/")
     super(:text => text, :x => 100, :y => 200)
   end
   
-  def update(time)
+  def update
     self.zoom(0.005)
     self.fade(-1)     #  if ($window.ticks % 2) == 0
   end

@@ -14,8 +14,10 @@ begin
 rescue
   require File.join(ROOT_PATH, 'lib', 'gosu.for_1_9.so')  
 end
-require File.join(ROOT_PATH, 'lib', 'chingu')
+require 'chingu'
+#require File.join(ROOT_PATH, 'lib', 'chingu')
 include Gosu
+include Chingu
 
 %w{my_game_object enemies cave_objects core_extensions game_over_state intro_state menu_state cavern_state}.each do |file|
   require File.join(ROOT_PATH, "src", file)

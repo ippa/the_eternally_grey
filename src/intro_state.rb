@@ -16,18 +16,22 @@ class Intro < Chingu::GameState
     switch_game_state(Cavern.new)
   end
   
-  def update(time)    
+  def update    
     game_objects.reject! { |object| object.color.alpha == 0}
     
     if game_objects.size == 0
       if string = @strings.pop
-        @text = Text.new(:text => string, :x => 100, :y => 200)
+        @text = Chingu::Text.new(:text => string, :x => 100, :y => 200)
       else
         switch_game_state(Cavern.new)
       end
     end
-    @text.zoom(0.005)
-    @text.fade(-1)  if ($window.ticks % 2) == 0
+    @text.factor_x += 0.005
+    @text.factor_y += 0.005
+    if ($window.ticks % 2) == 0
+      @text.color.alpha -= 1  if @text.color.alpha > 0
+    end
+    #@text.fade(-1)  if ($window.ticks % 2) == 0
   end
   
   def setup
