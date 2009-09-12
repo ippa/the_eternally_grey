@@ -54,6 +54,8 @@ end
 
 
 class Machine < MyGameObject
+  has_trait :effect
+  
   def initialize(options)
     super
     @dig_at = options[:dig_at] || rand($window.width) ##$window.width/2 + 100 - rand(200)
