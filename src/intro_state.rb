@@ -1,4 +1,5 @@
 class Intro < Chingu::GameState
+  
   def initialize
     super
     
@@ -32,4 +33,5 @@ class Intro < Chingu::GameState
   def setup
     Song["the_eternally_grey_1.ogg"].play(true)
   end
+  
 end
