@@ -9,11 +9,7 @@ class Intro < Chingu::GameState
       "...something, a feeling ... I haven't felt in ages..."
     ].reverse
     
-    self.input = { :space => :start_game, :esc => :exit }
-  end
-  
-  def start_game
-    switch_game_state(Cavern.new)
+    self.input = { :space => Cavern, :esc => :exit }
   end
   
   def update    
@@ -31,14 +27,9 @@ class Intro < Chingu::GameState
     if ($window.ticks % 2) == 0
       @text.color.alpha -= 1  if @text.color.alpha > 0
     end
-    #@text.fade(-1)  if ($window.ticks % 2) == 0
   end
   
   def setup
     Song["the_eternally_grey_1.ogg"].play(true)
   end
-  
-  #def finalize
-  #  Song.current_song.stop
-  #end
 end

@@ -7,7 +7,7 @@ class MyGameObject < Chingu::GameObject
   attr_accessor :status, :zorder
   
   def initialize(options)
-    super
+    super(options.merge({:debug => false}))
     @center_y = 1
     @velocity = 0
     @velocity_x = 0

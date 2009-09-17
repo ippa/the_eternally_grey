@@ -5,24 +5,16 @@
 #
 $stderr.sync = $stdout.sync = true
 ROOT_PATH = File.dirname(File.expand_path(__FILE__))
-ENV["RUBYOPT"] = nil
 
-#require 'rubygems'
-
-begin
-  require 'gosu'
-rescue
-  require File.join(ROOT_PATH, 'lib', 'gosu.for_1_9.so')  
-end
+require 'gosu'
 require 'chingu'
-#require File.join(ROOT_PATH, 'lib', 'chingu')
+
+#require '../chingu/lib/chingu.rb'
+
 include Gosu
 include Chingu
 
-%w{my_game_object enemies cave_objects core_extensions game_over_state intro_state menu_state cavern_state}.each do |file|
-  require File.join(ROOT_PATH, "src", file)
-end
-
+require_all "#{ROOT_PATH}/src"
 
 class Game < Chingu::Window
   def initialize

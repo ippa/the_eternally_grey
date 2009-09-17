@@ -12,7 +12,3 @@ fynal?!
   Ruby 1.8+ / 1.9+
   gem install gosu
   gem install ippa-chingu
-  
-  
-  
-  
