@@ -24,13 +24,13 @@ class Cavern < Chingu::GameState
 #                    :esc => :exit }
                     
     self.input = { :left_mouse_button => :click, :esc => :exit}
-    @cursor = Cursor.new
+    @cursor = Cursor.create
     
     @riches = 100
     @score = 0
     @riches_rect = Rect.new(10, 10, @riches, 20)
-    @riches_text = Text.new(:text => "Riches: ", :x => 20, :y => 13, :color => Color.new(0xFF000000), :zorder => 1000)
-    @score_text = Text.new(:text => "Score: #{@score}", :x => 150, :y => 13, :color => Color.new(0xFFFFFFFF), :zorder => 1000)                    
+    @riches_text = Text.create(:text => "Riches: ", :x => 20, :y => 13, :color => Color.new(0xFF000000), :zorder => 1000)
+    @score_text = Text.create(:text => "Score: #{@score}", :x => 150, :y => 13, :color => Color.new(0xFFFFFFFF), :zorder => 1000)                    
   end
   
   def setup
@@ -40,7 +40,7 @@ class Cavern < Chingu::GameState
     @first_drill = true
     @first_gem = true
     @milliseconds = milliseconds()
-    game_objects.delete_if { |o| o.is_a?(Miner) || o.is_a?(Machine) || o.is_a?(Gemstone) || o.is_a?(Stalactite)}
+    game_objects.destroy_if { |o| o.is_a?(Miner) || o.is_a?(Machine) || o.is_a?(Gemstone) || o.is_a?(Stalactite)}
     spawn_miner
     5.times { spawn_stalactite }
   end
@@ -65,17 +65,17 @@ class Cavern < Chingu::GameState
   def spawn_machine;  spawn_enemy(Machine); end  
   def spawn_enemy(klass)
     if rand(2) == 1
-      klass.new(:x => 0, :y => @floor_y).move_right
+      klass.create(:x => 0, :y => @floor_y).move_right
     else
-      klass.new(:x => $window.width, :y => @floor_y).move_left
+      klass.create(:x => $window.width, :y => @floor_y).move_left
     end
   end
   def spawn_stalactite
-    Stalactite.new(:x => rand($window.width), :y => @ceiling_height)
+    Stalactite.create(:x => rand($window.width), :y => @ceiling_height)
   end
   def spawn_gemstone(x=200, y = @floor_y)
     type = Gemstone.gem_types[rand(Gemstone.gem_types.size)]
-    Gemstone.new(:x => x, :y => y, :type => type)
+    Gemstone.create(:x => x, :y => y, :type => type)
   end
 
   #
@@ -90,31 +90,36 @@ class Cavern < Chingu::GameState
     
     # Increases 1 each 10 second
     value = (game_state_age / 10).to_i    
-    if game_objects_of_class(Miner).size < 20
+    #if game_objects_of_class(Miner).size < 20
+    if Miner.size < 20
       spawn_miner       if (game_state_age > 20) && rand(7 * (60-value)) == 0
     end
     
-    if game_objects_of_class(Machine).size < 6
+    #if game_objects_of_class(Machine).size < 6
+    if Machine.size < 20
       spawn_machine     if (game_state_age > 120) && rand(7 * (120-value)) == 0
     end
 
-    if game_objects_of_class(Stalactite).size < 5
+    #if game_objects_of_class(Stalactite).size < 5
+    if Stalactite.size < 5
       spawn_stalactite  if rand(100) == 0
-    elsif game_objects_of_class(Stalactite).size < 10
+    #elsif game_objects_of_class(Stalactite).size < 10
+    elsif Stalactite.size < 10      
       spawn_stalactite  if rand(200) == 0
-    elsif game_objects_of_class(Stalactite).size < 20
+    #elsif game_objects_of_class(Stalactite).size < 20
+    elsif Stalactite.size < 20
       spawn_stalactite  if rand(300) == 0
     end
 
 
     game_objects.select { |o| o.outside_window? && o.is_a?(Gemstone) }.each do |gemstone|
       @riches -= gemstone.score
-      CavernText.new("They stole my beautiful child, #{gemstone.type}. I raised her for #{gemstone.score} years.")
+      CavernText.create("They stole my beautiful child, #{gemstone.type}. I raised her for #{gemstone.score} years.")
       @riches_rect.width = @riches
       push_game_state(GameOver.new(:score => @score))   if @riches <= 0
     end
     
-    game_objects.delete_if { |o| (o.outside_window? || o.color.alpha == 0) && o.class != Cursor }
+    game_objects.destroy_if { |o| (o.outside_window? || o.color.alpha == 0) && o.class != Cursor }
     
     fill_gradient(:from => @dark_gold, :to => @light_gold, :rect => @riches_rect, :zorder => 999)
     @riches_text.text = "Riches: #{@riches}"
@@ -124,7 +129,7 @@ class Cavern < Chingu::GameState
       game_objects_of_class(Gemstone).select { |gemstone| gemstone.status != :attached }.each do |gemstone|
         if miner.rect.collide_rect?(gemstone.rect)
           miner.attach(gemstone)
-          CavernText.new("They're stealing my loved ones!")  if @first_gem
+          CavernText.create("They're stealing my loved ones!")  if @first_gem
           @first_gem = false
         end
       end
@@ -154,7 +159,9 @@ class Cavern < Chingu::GameState
           2.times { spawn_smoke(stalactite.rect.centerx, @floor_y - enemy.rect.height, stalactite.power/800) }
           enemy.rect.y = @floor_y
           Sample["explosion.wav"].play(0.5)
-          game_objects.delete(stalactite)
+          
+          #game_objects.delete(stalactite)
+          stalactite.destroy!
         end
       end
     end
@@ -165,7 +172,7 @@ class Cavern < Chingu::GameState
   def spawn_smoke(x, y, factor)
     x += 10 - rand(20)
     y += 10 - rand(20)
-    Particle.new(:x => x, :y => y, :image => Image["particle.png"], :fading => -5, :rotating => 10, :zooming => 0.04, :zorder => 100, :mode => :default, :factor => factor)
+    Particle.create(:x => x, :y => y, :image => Image["particle.png"], :fading => -5, :rotating => 10, :zooming => 0.04, :zorder => 100, :mode => :default, :factor => factor)
   end
   
   def click
@@ -181,16 +188,16 @@ class Cavern < Chingu::GameState
     else
       
       if @first_dig && object.is_a?(Miner)
-        CavernText.new("... That hurt.")
+        CavernText.create("... That hurt.")
         @first_dig = false
       end
 
       if @first_drill && object.is_a?(Machine)
-        CavernText.new("... What is this big evil thing?")
+        CavernText.create("... What is this big evil thing?")
         @first_drill = false
       end
 
-      Crack.new(:x => object.attack_x, :y => @floor_y)
+      Crack.create(:x => object.attack_x, :y => @floor_y)
     end
   end
   

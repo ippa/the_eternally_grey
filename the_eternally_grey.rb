@@ -7,7 +7,7 @@ $stderr.sync = $stdout.sync = true
 ROOT_PATH = File.dirname(File.expand_path(__FILE__))
 
 require 'gosu'
-require 'chingu'
+require '../chingu/lib/chingu'
 
 include Gosu
 include Chingu

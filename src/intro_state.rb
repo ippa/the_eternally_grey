@@ -13,12 +13,16 @@ class Intro < Chingu::GameState
     self.input = { :space => Cavern, :esc => :exit }
   end
   
+  def setup
+    Song["the_eternally_grey_1.ogg"].play(true)
+  end  
+  
   def update    
-    game_objects.reject! { |object| object.color.alpha == 0}
+    game_objects.destroy_if { |object| object.color.alpha == 0}
     
     if game_objects.size == 0
       if string = @strings.pop
-        @text = Chingu::Text.new(:text => string, :x => 100, :y => 200)
+        @text = Chingu::Text.create(:text => string, :x => 100, :y => 200)
       else
         switch_game_state(Cavern.new)
       end
@@ -29,9 +33,4 @@ class Intro < Chingu::GameState
       @text.color.alpha -= 1  if @text.color.alpha > 0
     end
   end
-  
-  def setup
-    Song["the_eternally_grey_1.ogg"].play(true)
-  end
-  
 end

@@ -28,7 +28,7 @@ class MyGameObject < Chingu::GameObject
   def hit_by(power)
     @energy -= power
     self.die!  if @energy < 0
-    puts "Hit by #{power}, energy: #{@energy}"
+    #puts "Hit by #{power}, energy: #{@energy}"
   end
   
   def die!

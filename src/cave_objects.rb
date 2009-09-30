@@ -82,7 +82,7 @@ end
 
 
 class Cursor < Chingu::GameObject
-  def initialize
+  def initialize(options = {})
     super
     @center_x = 0
     @center_y = 0
