@@ -172,7 +172,7 @@ class Cavern < Chingu::GameState
   def spawn_smoke(x, y, factor)
     x += 10 - rand(20)
     y += 10 - rand(20)
-    Particle.create(:x => x, :y => y, :image => Image["particle.png"], :fading => -5, :rotating => 10, :zooming => 0.04, :zorder => 100, :mode => :default, :factor => factor)
+    Particle.create(:x => x, :y => y, :image => Image["particle.png"], :fade_rate => -5, :rotation_rate => 10, :scale_rate => 0.04, :zorder => 100, :mode => :default, :factor => factor)
   end
   
   def click

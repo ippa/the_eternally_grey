@@ -2,6 +2,7 @@
 # Most in game objects are based this clss
 # Provides simple x/y movement, status, animation etc.
 #
+require 'set'
 class MyGameObject < Chingu::GameObject
   attr_reader :rect, :height, :width, :energy
   attr_accessor :status, :zorder
