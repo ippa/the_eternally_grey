@@ -1,5 +1,5 @@
 class Miner < MyGameObject  
-  has_trait :effect
+  trait :effect
   
   def initialize(options)
     super
@@ -10,11 +10,11 @@ class Miner < MyGameObject
     @dig_at = options[:dig_at] || rand($window.width) ##$window.width/2 + 100 - rand(200)
     
     @animations = Hash.new
-    @animations[:full] = Animation.new(:file => media_path("miner.png"), :height => @height, :width => @width, :delay => 70)
+    @animations[:full] = Animation.new(:file => "miner.png", :height => @height, :width => @width, :delay => 70)
     @animations[:stopped] = @animations[:full].new_from_frames(0..1)
     @animations[:moving] = @animations[:full].new_from_frames(0..3)
-    @animations[:dead] = Animation.new(:file => media_path("miner_dying.png"), :height => @height, :width => @width, :delay => 70, :loop => false, :bounce => false)
-    @animations[:digging] = Animation.new(:file => media_path("miner_digging.png"), :height => @height, :width => @width, :delay => 400)
+    @animations[:dead] = Animation.new(:file => "miner_dying.png", :height => @height, :width => @width, :delay => 70, :loop => false, :bounce => false)
+    @animations[:digging] = Animation.new(:file => "miner_digging.png", :height => @height, :width => @width, :delay => 400)
     @animations[:digging].on_frame(1) do
       self.parent.digg(self)
       Sample["hack.wav"].play(0.4)
@@ -54,7 +54,7 @@ end
 
 
 class Machine < MyGameObject
-  has_trait :effect
+  trait :effect
   
   def initialize(options)
     super
@@ -65,11 +65,11 @@ class Machine < MyGameObject
     @height = 45
     
     @animations = Hash.new
-    @animations[:full] = Animation.new(:file => media_path("machine.png"), :width => @width, :height => @height, :delay => 80)
+    @animations[:full] = Animation.new(:file => "machine.png", :width => @width, :height => @height, :delay => 80)
     @animations[:moving] = @animations[:full].new_from_frames(0..1)
     @animations[:stopped] = @animations[:full].new_from_frames(0..0)
-    @animations[:dead] = Animation.new(:file => media_path("machine_dying.png"), :height => @height, :width => @width, :delay => 70, :loop => false, :bounce => false)
-    @animations[:digging] = Animation.new(:file => media_path("machine_digging.png"), :width => @width, :height => @height, :delay => 300)
+    @animations[:dead] = Animation.new(:file => "machine_dying.png", :height => @height, :width => @width, :delay => 70, :loop => false, :bounce => false)
+    @animations[:digging] = Animation.new(:file => "machine_digging.png", :width => @width, :height => @height, :delay => 300)
     @animations[:digging].on_frame(1) do
       self.parent.digg(self)
     end
@@ -104,14 +104,14 @@ class Machine < MyGameObject
 end
 
 
-class Crack < Chingu::GameObject
-  has_trait :effect
+class StoneCrack < Chingu::GameObject
+  trait :effect
     
   attr_reader :status
   
   def initialize(options)
     super
-    @animation = Animation.new(:file => media_path("crack.png"), :width => 39, :height => 22, :zorder => 110, :loop => false, :bounce => false, :delay => 0)
+    @animation = Animation.new(:file => "crack.png", :width => 39, :height => 22, :zorder => 110, :loop => false, :bounce => false, :delay => 0)
     @image = @animation.frames.first
     @center_x = 0.5
     @center_y = 0

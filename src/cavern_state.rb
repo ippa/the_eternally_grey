@@ -182,7 +182,7 @@ class Cavern < Chingu::GameState
   end
   
   def digg(object)
-    if (crack = game_objects_of_class(Crack).select { |crack| crack.x == object.attack_x }.first)
+    if (crack = game_objects_of_class(StoneCrack).select { |crack| crack.x == object.attack_x }.first)
       crack.hit_by(object)
       object.done_digging if crack.finished?
     else
@@ -197,7 +197,7 @@ class Cavern < Chingu::GameState
         @first_drill = false
       end
 
-      Crack.create(:x => object.attack_x, :y => @floor_y)
+      StoneCrack.create(:x => object.attack_x, :y => @floor_y)
     end
   end
   
